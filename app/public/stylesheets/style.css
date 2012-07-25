@@ -1,0 +1,230 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+body, #entry {
+  background: white;
+  color: #111;
+}
+body, table {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+  
+  line-height: 150%;
+}
+tr,td,table {
+  padding: 0;
+  margin: 0;
+  outline-width: 0;
+  border-width: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+a { text-decoration: none; color: #888; }
+a:hover { text-decoration: underline; color: #aaa; }
+
+/*#loading {
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+}*/
+
+#loading { z-index: 10000000; }
+#connect { z-index: 10000001; }
+#activity { z-index: 10000001; }
+
+#loading p, #connect fieldset  {
+  font-family: DejaVu Sans Mono, fixed; 
+  border: 0;
+}
+
+#application {
+  position:relative;
+  width:90%;
+  margin:50px auto 0px;
+  background:white;
+}
+
+#content {
+  min-height: 400px;
+}
+
+#left {
+  width:100%;
+}
+
+#activity {  
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  left:60%;
+  overflow:hidden;
+  z-index: 1;
+}
+
+#log {
+  position:absolute;
+  top:55px;
+  bottom:55px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  left:0;
+  right:0;
+  z-index: 1;
+}
+
+#toolbar {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  margin-bottom: 15px;
+}
+
+#entry {
+  width: 95%;
+  font-size: inherit;
+  margin: 0;
+  border: 1px solid #eee;
+  outline-width: 0;
+  height:40px;
+  line-height: 1em;
+}
+
+#song_list {
+}
+
+/* not very important info */
+.notice td, .join td, .part td, .message .date { color: #555; }
+.error td { color: #933; }
+.personal .nick, .notice .nick { color: #c15; }
+
+.message {
+  margin: 0.1em 0;
+}
+
+.message td {
+  vertical-align: top;
+}
+
+.nick { 
+  font-weight: bold;
+  padding: 0 1em 0 0.5em;
+}
+
+.nick a {
+  color: inherit;
+}
+
+#toolbar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#toolbar li {
+  display: block; 
+  float: left;
+  margin: 0 2em 0 0;
+}
+
+#usersLink {
+  color: inherit;
+}
+
+#left > div {
+  border-bottom:3px solid #fff;
+}
+
+.form {
+  padding: 10px;
+}
+
+#left div:last-child {
+  border:none;
+}
+
+.roundedcornr_box {
+   background: #ffffff;
+}
+.roundedcornr_top div {
+   background: url(/images/roundedcornr_tl.png) no-repeat top left;
+}
+.roundedcornr_top {
+   background: url(/images/roundedcornr_tr.png) no-repeat top right;
+}
+.roundedcornr_bottom div {
+   background: url(/images/roundedcornr_bl.png) no-repeat bottom left;
+}
+.roundedcornr_bottom {
+   background: url(/images/roundedcornr_br.png) no-repeat bottom right;
+}
+
+.roundedcornr_top div, .roundedcornr_top, 
+.roundedcornr_bottom div, .roundedcornr_bottom {
+   width: 100%;
+   height: 15px;
+   font-size: 1px;
+}
+
+#search-results td {
+  padding: 5px;
+}
+
+.button {
+  margin: 10px;
+}
+
+#buttons {
+  margin-left: 45px;
+}
+
+.song {
+  list-style:none;
+}
+
+.youtube_search_image {
+  width: 60px;
+  height: 45px;
+}
+
+.soundcloud_search_image {
+  width: 50px;
+  height: 50px;
+}
+
+table#queue td {
+  padding: 10px;
+}
+
+#youtube_father {
+  width:300px; 
+  height: 300px; 
+  float:right;
+  margin-right: 200px;
+}
+
+table#osx-modal-data-list td {
+  padding: 15px;
+}
+
+.search_published_at {
+  font-size: 12px;
+  width: 100px;
+}
+
+table#queue {
+  margin-left: 50px;
+  width: 300px;
+}
+
+table tr.current_song { 
+  background: #ccc;
+}
