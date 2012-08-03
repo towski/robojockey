@@ -1,7 +1,7 @@
 var express = require('express'), 
     app = express.createServer() 
 
-var db = require('./db').db
+//var db = require('./db').db
 var redisLib = require("redis")
 
 PORT = 2480
@@ -12,7 +12,7 @@ redis.auth(AUTH)
 var fs = require('fs')
 var request = require('./request')
 var utils = require('./utils')
-request.setDB(db)
+//request.setDB(db)
 request.setRedis(redis)
 
 callbacks = {}
