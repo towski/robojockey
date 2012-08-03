@@ -3,7 +3,12 @@ var express = require('express'),
 
 var db = require('./db').db
 var redisLib = require("redis")
-var redis = redisLib.createClient();
+
+PORT = 2480
+HOST = "50.30.35.9"
+AUTH = "f7fbee72f3035b6fc1c13fe92e6121d5"
+var redis = redisLib.createClient(PORT, HOST)
+redis.auth(AUTH)
 var fs = require('fs')
 var request = require('./request')
 var utils = require('./utils')
@@ -53,23 +58,37 @@ app.get('/:id', function(req, res){
   });
 })
 
-CARLY_RAE = '[{"type":"youtube","link":"undefined","title":"Carly Rae Jepsen - Call Me Maybe","id":"fWNaR-rxAic","published_at":"2012-03-01T23:21:04.000Z","image":"http://i.ytimg.com/vi/fWNaR-rxAic/default.jpg","duration":"200"}]'
+DEFAULT = '[{"type":"youtube","link":"undefined","title":"Carly Rae Jepsen - Call Me Maybe","id":"fWNaR-rxAic","published_at":"2012-03-01T23:21:04.000Z","image":"http://i.ytimg.com/vi/fWNaR-rxAic/default.jpg","duration":"200"}]'
 
-app.get('/:id/room_queue', function(req, res){
-  var user = initializeSession(req, res)
+app.get('/:id/clear', function(req, res){
+  redis.ltrim(utils.fullRoomQueue(req.params.id), 1, 1)
+  res.send("OK")
+})
+
+-10 , -1
+
+app.get('/:id/media/:page', function(req, res){
+  var page = req.params.page || 0
   var room = req.params.id
-  redis.lrange(utils.fullRoomQueue(room), 0, 10, function(err, reply){
+  redis.lrange(utils.fullRoomQueue(room), (page * -10) - 10, (page * -10) - 1, function(err, reply){
     if(reply.length == 0){
-      // send 'em some good 'ol Carly Rae
-      res.send(CARLY_RAE)
+      res.send(DEFAULT)
     } else {
       res.send("[" + unescape(reply) + "]")
     }
-  });
-  //redis.lrange(utils.userRoomQueue(room, user), 0, 10, function(err, reply){
-  //  redis.ltrim(utils.userRoomQueue(room, user), 11, -1)
-  //  res.send(reply)
-  //});
+  })
+})
+
+app.get('/:id/count', function(req, res){
+  redis.llen(utils.fullRoomQueue(req.params.id), function(err, resp){
+    res.send(resp.toString())
+  })
+})
+
+app.get('/:id/users', function(req, res){
+  redis.smembers(utils.roomUsers(req.params.id), function(err, resp){
+    res.send(resp)
+  })
 })
 
 app.get('/:id/events', function(req, res){

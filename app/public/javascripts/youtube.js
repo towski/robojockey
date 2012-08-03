@@ -11,6 +11,7 @@ function onYouTubePlayerReady(playerId) {
 function onytplayerStateChange(newState) {
   clearTimeout(youtube_timeout);
   if(newState == 0){
+    app.forward()
   } else if(newState == -1) {
     youtube_timeout = setTimeout(function(){
       console.log("skip")

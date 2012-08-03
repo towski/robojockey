@@ -7,6 +7,8 @@
     <script src="/javascripts/youtube.js" type="text/javascript"></script>
     <script src='/javascripts/jquery.simplemodal.js' type='text/javascript'></script>
     <script src='/javascripts/jquery.timeago.js' type='text/javascript'></script>
+    <script src="/javascripts/soundcloud.player.api.js" type="text/javascript"></script>
+    <script src="/javascripts/soundcloud.js" type="text/javascript"></script>
     <script src="/javascripts/osx.js" type="text/javascript"></script>
     <link type='text/css' href='/stylesheets/style.css' rel='stylesheet' media='screen' />
     <link type='text/css' href='/stylesheets/osx.css' rel='stylesheet' media='screen' />    
@@ -21,19 +23,29 @@
               You need Flash player 9+ and JavaScript enabled to view this video.
             </div>
           </div>
+          <div id="soundcloud" style='height: 61px; width: 500px;'>
+            <span>&nbsp;</span>
+            <div id="myContent">
+            </div>
+          </div>
         </div>
         
-        <div>
-          <div id='buttons'>
+        <div id='left-side'>
+          <span id='buttons'>
             <img id='back' class='button' src='/images/back.png'/>    
             <img id='play' class='button' src='/images/play.png'/>
             <img id='stop' class='button' src='/images/stop.png'/>
             <img id='forward' class='button' src='/images/forward.png'/>
-          </div>
-        </div>
-        
-        <table id='queue'>
-        </table>
+          </span>  
+          <span class='history' id='past' title='total songs requested'>80</span>
+          <span class='history' title='number of songs in the queue'>10</span>
+          <span class='history white_history'>
+            <img style='background: white; margin-top:10px;' width='12px' height='29px' src='/images/user.png' style='margin-top:-10px'/>
+          </span>
+          <span class='history' title='people have listened to this playlist'>4</span> 
+          <table id='queue'>
+          </table>
+        </div>        
       </div>
       <div class="roundedcornr_bottom"><div></div></div>
     </div>
@@ -45,6 +57,7 @@
         <form id='youtube_search'>
           <input type="text" id='youtube_search_text' name="q[fulltext]" style="float:left; width:200px; margin-left: 15px;">
           <input type="submit" id='youtube_search_submit' value="search" style="float:left"> &nbsp;
+          <img id='search_indicator' src='/images/loading_indicator.gif' style='display:none' width='24px' height='24px'/>
         </form>
       </div>
     </div>

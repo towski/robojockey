@@ -11,75 +11,76 @@
  * Revision: $Id: osx.js 238 2010-03-11 05:56:57Z emartin24 $
  */
 
-jQuery(function ($) {
-	var OSX = {
-		container: null,
-		init: function () {
-		  if(youtubePlaying){
-		    var position = ['100','490'];
-	    } else {
-	      var position = ['100'];
-      }
-			$("#osx-modal-content").modal({
-				overlayId: 'osx-overlay',
-				containerId: 'osx-container',
-				closeHTML: null,
-				minHeight: 400,
-				opacity: 65, 
-				position: position,
-				overlayClose: true,
-				onOpen: OSX.open
-			});
-		},
-		open: function (d) {
-			var self = this;
-			self.container = d.container[0];
-				$("#osx-modal-content", self.container).show();
-				var title = $("#osx-modal-title", self.container);
-				title.show();
-				d.container.show()
-				var h = $("#osx-modal-data", self.container).height() +
-				  $("#search-results", self.container).height() +
-					+ title.height()
-					+ 20; // padding
-				$("#osx-container").height(h)
-				$("div.close", self.container).show();
-				$("#osx-modal-data", self.container).show();
-		}
-	};
-	
-	window.search = function(params){
-	  if(params == undefined){
-	    params = {};
+var OSX = {
+	container: null,
+	init: function () {
+	  if(youtubePlaying){
+	    var position = ['100','490'];
+    } else {
+      var position = ['100'];
     }
-  	$.ajax({url: "/search", data: params, dataType: 'json',
-      success:function(data) {
-        $('#search-results').html(tmpl("data_tmpl",{data: data}));
-        $('#next_page').click(function(){
-          if(params.type){
-            var query = {type:params.type, page_start: data[data.length-1]._id};
-          }else{
-            var query = {page_start: data[data.length-1]._id}
-          }
-          search(query);
-        });
-    	  OSX.init();
-      }
-    })
+		$("#osx-modal-content").modal({
+			overlayId: 'osx-overlay',
+			containerId: 'osx-container',
+			closeHTML: null,
+			minHeight: 400,
+			opacity: 65, 
+			position: position,
+			overlayClose: true,
+			onOpen: OSX.open
+		});
+	},
+	open: function (d) {
+		var self = this;
+		self.container = d.container[0];
+			$("#osx-modal-content", self.container).show();
+			var title = $("#osx-modal-title", self.container);
+			title.show();
+			d.container.show()
+			var h = $("#osx-modal-data", self.container).height() +
+			  $("#search-results", self.container).height() +
+				+ title.height()
+				+ 20; // padding
+			$("#osx-container").height(h)
+			$("div.close", self.container).show();
+			$("#osx-modal-data", self.container).show();
+	}
+};
+
+window.search = function(params){
+  if(params == undefined){
+    params = {};
   }
-	
-	$("#open_search").click(function(e) {
+	$.ajax({url: "/search", data: params, dataType: 'json',
+    success:function(data) {
+      $('#search-results').html(tmpl("data_tmpl",{data: data}));
+      $('#next_page').click(function(){
+        if(params.type){
+          var query = {type:params.type, page_start: data[data.length-1]._id};
+        }else{
+          var query = {page_start: data[data.length-1]._id}
+        }
+        search(query);
+      });
+  	  OSX.init();
+    }
+  })
+}
+
+jQuery(function ($) {
+  $("#open_search").click(function(e) {
     search();
   })
-	
-	$("#youtube_search").submit(function(e) {
-	  $('#search-results').html("");
-	  $("#osx-modal-data-list").children().remove();
-	  var search = $('#youtube_search_text').attr('value');
-	  var provider = $('input:radio[name=group1]:checked').val()
-	  if(provider == "youtube"){
-	    $.ajax({url: "http://gdata.youtube.com/feeds/api/videos", data: { v: 2, alt: "json", q: search }, dataType: 'jsonp', 
+  
+  $("#youtube_search").submit(function(e) {
+    app.handleSearch()
+    var search = $('#youtube_search_text').attr('value');
+    var provider = $('input:radio[name=group1]:checked').val()
+    if(provider == "youtube"){
+      $.ajax({url: "http://gdata.youtube.com/feeds/api/videos", data: { v: 2, alt: "json", q: search }, dataType: 'jsonp', 
         success:function(data) {
+          $('#youtube_search_submit').show()
+      	  $('#search_indicator').hide()
           var items = data.feed.entry; 
           for(var i = 0; i < items.length; i++){
             var description = items[i].media$group.media$description.$t;
@@ -106,6 +107,7 @@ jQuery(function ($) {
             }
             $.ajax({url: location.pathname + "/events/create", type: "POST", data: data});
             $.modal.close();
+            $('#youtube_search_text').focus()
             return false;
           });
       		OSX.init();
@@ -114,6 +116,8 @@ jQuery(function ($) {
     }else if(provider == "soundcloud"){
       $.ajax({url: "http://api.soundcloud.com/tracks.json", data: { q: search , consumer_key: "keHOFdLJaAAm9mGxgUxYw"}, dataType: 'jsonp',
         success:function(data) {
+          $('#youtube_search_submit').show()
+      	  $('#search_indicator').hide()
           for(var i = 0; i < data.length && i < 20; i++){
             if(data[i].description){
               var description = data[i].description.replace(/\"/g, "&quot;");
@@ -137,7 +141,7 @@ jQuery(function ($) {
             var index = parseInt(target.id)
             var json = {
               type:'soundcloud', 
-              link: event.target.href, 
+              link:  data[index].permalink_url, 
               title: data[index].title, 
               image: data[index].artwork_url,
               duration: (data[index].duration / 1000.0),
@@ -145,13 +149,13 @@ jQuery(function ($) {
             }
             $.ajax({url: location.pathname + "/events/create", type: "POST", data: json});
             $.modal.close();
+            $('#youtube_search_text').focus()
             return false;
           });
       		OSX.init();
         }
       })
     }
-		return false;
-	});
-  
+  	return false;
+  });
 });
