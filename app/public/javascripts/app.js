@@ -1,4 +1,11 @@
 var App = function(){
+  this.endingIndex = Cookie.get('endingIndex')
+  if(this.endingIndex == null || this.endingIndex == ""){
+    this.updateEndingIndex(0)
+  } else {
+    this.endingIndex = parseInt(this.endingIndex)
+    $('#current_ending').html(this.endingIndex)
+  }
   this.media = JSON.parse(Cookie.get('media'))
   if(this.media == null){
     this.media = []
@@ -18,6 +25,7 @@ var App = function(){
   this.setSearchBox()
   this.refreshQueue()
   this.makeRequest()
+  this.getTotalCount()
   this.playing = false
   $('#youtube_search_text').focus()
 }
@@ -202,7 +210,12 @@ App.prototype = {
       },
       success: function(data) {
         myApp.makeRequest()
-        myApp.handleData(data)
+        myApp.totalCount = data.count
+        $('#past').html(myApp.totalCount)
+        if(myApp.media.length < 10){
+          myApp.updateEndingIndex(myApp.endingIndex + 1)
+          myApp.handleData(data.data)
+        }
       }
     });
   },
@@ -229,18 +242,50 @@ App.prototype = {
     })
   },
   
-  getFullQueue: function(){
+  updateEndingIndex: function(newIndex){
+    this.endingIndex = newIndex
+    Cookie.set('endingIndex', this.endingIndex, undefined, location.pathname)
+    console.log($('#current_ending').length)
+    $('#current_ending').html(this.endingIndex)
+  },
+  
+  getTotalCount: function(){
     var myApp = this
     $.ajax({
       cache: false,
       type: "GET",
-      url: location.pathname + "/media/" + 0,
+      url: location.pathname + "/count",
       dataType: "json",
+      parameters: {},
       success: function(data) {
-        myApp.handleData(data)
-        
-        //myApp.media = data
-        //myApp.refreshQueue()
+        myApp.totalCount = data
+        $('#past').html(myApp.totalCount)
+      }
+    })
+  },
+  
+  showMore: function(){
+    if(this.media.length < 10 && (this.totalCount && this.endingIndex < this.totalCount)){
+      this.getFullQueue()
+    }
+  },
+  
+  getFullQueue: function(){
+    var myApp = this
+    var path = location.pathname + "/media_forwards/" + this.endingIndex + "/" + (10 - this.media.length)
+    $.ajax({
+      cache: false,
+      type: "GET",
+      url: path,
+      dataType: "json",
+      parameters: {},
+      success: function(data) {
+        if(data != null && data.length > 0 && data[0].title == "Carly Rae Jepsen - Call Me Maybe (sample track)"){
+          myApp.handleData(data)
+        } else {
+          myApp.updateEndingIndex(parseInt(myApp.endingIndex) + data.length)
+          myApp.handleData(data)
+        }
       }
     });
   }

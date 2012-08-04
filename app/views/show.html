@@ -37,14 +37,16 @@
             <img id='stop' class='button' src='/images/stop.png'/>
             <img id='forward' class='button' src='/images/forward.png'/>
           </span>  
-          <span class='history' id='past' title='total songs requested'>80</span>
-          <span class='history' title='number of songs in the queue'>10</span>
-          <span class='history white_history'>
+          <img class='history' id='queue_indicator' src='/images/loading_indicator.gif' width='24px' height='24px' style='display:none'/>
+          <span class='history' id='past' title='total songs requested'></span>
+          <!--span class='history white_history'>
             <img style='background: white; margin-top:10px;' width='12px' height='29px' src='/images/user.png' style='margin-top:-10px'/>
-          </span>
-          <span class='history' title='people have listened to this playlist'>4</span> 
+          </span>          
+          <span class='history' title='people have listened to this playlist'>4</span-->           
+          <span class='history' id='current_ending' title='current position'></span>           
           <table id='queue'>
           </table>
+          <a style='margin-left:250px' href='#' onclick='app.showMore(); return false'>show more (max 10)</a>
         </div>        
       </div>
       <div class="roundedcornr_bottom"><div></div></div>

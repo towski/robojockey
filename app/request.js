@@ -9,11 +9,12 @@ exports.setRedis = function(redisClient){
 }
 
 exports.create = function(data, room, user_cb, cb){
-  redis.rpush(utils.fullRoomQueue(room), JSON.stringify(data))
-  redis.smembers(utils.roomUsers(room), function(err, reply){
-    for (index in reply) {
-      user_cb(reply[index], JSON.stringify(data))
-    }
+  redis.rpush(utils.fullRoomQueue(room), JSON.stringify(data), function(err, countReply){
+    redis.smembers(utils.roomUsers(room), function(err, reply){
+      for (index in reply) {
+        user_cb(reply[index], JSON.stringify({count: countReply, data: data}))
+      }
+    })
   })
   cb()
 }

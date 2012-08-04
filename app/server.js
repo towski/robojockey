@@ -58,19 +58,31 @@ app.get('/:id', function(req, res){
   });
 })
 
-DEFAULT = '[{"type":"youtube","link":"undefined","title":"Carly Rae Jepsen - Call Me Maybe","id":"fWNaR-rxAic","published_at":"2012-03-01T23:21:04.000Z","image":"http://i.ytimg.com/vi/fWNaR-rxAic/default.jpg","duration":"200"}]'
+DEFAULT = '[{"type":"youtube","link":"undefined","title":"Carly Rae Jepsen - Call Me Maybe (sample track)","id":"fWNaR-rxAic","published_at":"2012-03-01T23:21:04.000Z","image":"http://i.ytimg.com/vi/fWNaR-rxAic/default.jpg","duration":"200"}]'
 
 app.get('/:id/clear', function(req, res){
   redis.ltrim(utils.fullRoomQueue(req.params.id), 1, 1)
   res.send("OK")
 })
 
--10 , -1
-
 app.get('/:id/media/:page', function(req, res){
   var page = req.params.page || 0
   var room = req.params.id
   redis.lrange(utils.fullRoomQueue(room), (page * -10) - 10, (page * -10) - 1, function(err, reply){
+    if(reply.length == 0){
+      res.send(DEFAULT)
+    } else {
+      res.send("[" + unescape(reply) + "]")
+    }
+  })
+})
+
+app.get('/:id/media_forwards/:starting_index/:number_to_get', function(req, res){
+  var starting_index = parseInt(req.params.starting_index || 0)
+  var number_to_get = parseInt(req.params.number_to_get || 10)
+  
+  var room = req.params.id
+  redis.lrange(utils.fullRoomQueue(room), starting_index, (starting_index + number_to_get) - 1, function(err, reply){
     if(reply.length == 0){
       res.send(DEFAULT)
     } else {
