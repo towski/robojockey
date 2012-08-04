@@ -142,7 +142,9 @@ App.prototype = {
   
   playIndex: function(index){
     $('#youtube_search_text').focus()
-    if(index >= this.media.length){ return }
+    if(index >= this.media.length){
+      return 
+    }
     this.playing = true
     this.setCurrentSong(index)
     this.refreshQueue()
@@ -181,6 +183,13 @@ App.prototype = {
       } else {
         this.currentSong += 1
         this.refreshQueue()
+      }
+    } else {
+      var myApp = this
+      if(this.endingIndex < this.totalCount && this.media.length < 10){
+        this.getFullQueue(function(){
+          myApp.forward()
+        })
       }
     }
   },
@@ -245,7 +254,6 @@ App.prototype = {
   updateEndingIndex: function(newIndex){
     this.endingIndex = newIndex
     Cookie.set('endingIndex', this.endingIndex, undefined, location.pathname)
-    console.log($('#current_ending').length)
     $('#current_ending').html(this.endingIndex)
   },
   
@@ -270,7 +278,8 @@ App.prototype = {
     }
   },
   
-  getFullQueue: function(){
+  getFullQueue: function(callback){
+    this.callback = callback
     var myApp = this
     var path = location.pathname + "/media_forwards/" + this.endingIndex + "/" + (10 - this.media.length)
     $.ajax({
@@ -282,9 +291,11 @@ App.prototype = {
       success: function(data) {
         if(data != null && data.length > 0 && data[0].title == "Carly Rae Jepsen - Call Me Maybe (sample track)"){
           myApp.handleData(data)
+          if(myApp.callback){ myApp.callback() }
         } else {
           myApp.updateEndingIndex(parseInt(myApp.endingIndex) + data.length)
           myApp.handleData(data)
+          if(myApp.callback){ myApp.callback() }
         }
       }
     });
