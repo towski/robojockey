@@ -39,6 +39,7 @@
           </span>  
           <img class='history' id='queue_indicator' src='/images/loading_indicator.gif' width='24px' height='24px' style='display:none'/>
           <span class='history' id='past' title='total songs requested'></span>
+          <span class='history'> / </span>
           <!--span class='history white_history'>
             <img style='background: white; margin-top:10px;' width='12px' height='29px' src='/images/user.png' style='margin-top:-10px'/>
           </span>          
@@ -62,6 +63,8 @@
           <img id='search_indicator' src='/images/loading_indicator.gif' style='display:none' width='24px' height='24px'/>
         </form>
       </div>
+      <a style='margin-left:250px' href='#' onclick='app.deleteData(); return false'>reset</a>
+      
     </div>
     <div id="osx-modal-content">
 			<div id="osx-modal-title"><center>Results</center></div>

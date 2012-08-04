@@ -87,13 +87,16 @@ jQuery(function ($) {
             description = description.replace(/\"/g, "&quot;");
             $("#osx-modal-data-list").append('<tr class="search_result" id="' + i + 'result">' +
               '<td><img class="youtube_search_image" src="' + items[i].media$group.media$thumbnail[0].url + '" /></td>' +
-              '<td><a id="' + i + 'number" title="'+ description +'" href="' + items[i].link[0].href + '" class="youtube_link">' + items[i].title.$t +  "</a></td>" +
+              '<td>' + items[i].title.$t + '<a id="' + i + 'number" title="'+ description +'" href="' + items[i].link[0].href + '" class="youtube_link" target="_blank"> (preview)</a></td>"' +
               "<td class='search_published_at'><abbr class='timeago search_published_at' title='" + items[i].published.$t + "'></abbr></td></tr>")
           }
           jQuery(document).ready(function() {
             jQuery("abbr.timeago").timeago();
           }); 
           $('tr.search_result').click(function(event){
+            if($(event.target).attr('class') == "youtube_link"){
+              return
+            }
             var target = $(event.target).parents('tr')[0]
             var index = parseInt(target.id)
             var data = {

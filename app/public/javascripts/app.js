@@ -288,6 +288,14 @@ App.prototype = {
         }
       }
     });
+  },
+  
+  deleteData: function(){
+    Cookie.erase('endingIndex', location.pathname)
+    Cookie.erase('currentSong', location.pathname)
+    Cookie.erase('username', location.pathname)
+    Cookie.erase('media', location.pathname)
+    Cookie.erase('search_preference'), location.pathname
   }
 }
 
