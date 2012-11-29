@@ -28,6 +28,7 @@
             <div id="myContent">
             </div>
           </div>
+          <audio id='bandcamp' autoplay='true'/>
         </div>
         
         <div id='left-side'>
@@ -53,10 +54,11 @@
       <div class="roundedcornr_bottom"><div></div></div>
     </div>
     <div id="left" style='margin-left:140px; margin-top: 20px;'>
-      <div id="search-youtube" class='form'>
-        <h3>&nbsp;Search 
+      <div id="search-youtube" class='form admin' style='display:none'>
+        <h3>&nbsp;add songs from
           <input type="radio" class='search_type' name="group1" value="youtube" id="youtube_search_radio_button" onclick="app.setSearchPreference('youtube_search_radio_button')"> youtube 
-          <input type="radio" class='search_type' name="group1" value="soundcloud" id="soundcloud_search_radio_button" onclick="app.setSearchPreference('soundcloud_search_radio_button')"> soundcloud</h3>
+          <input type="radio" class='search_type' name="group1" value="soundcloud" id="soundcloud_search_radio_button" onclick="app.setSearchPreference('soundcloud_search_radio_button')"> soundcloud
+          <input type="radio" class='search_type' name="group1" value="bandcamp" id="bandcamp_search_radio_button" onclick="app.setSearchPreference('bandcamp_search_radio_button')"> bandcamp</h3>          
         <form id='youtube_search'>
           <input type="text" id='youtube_search_text' name="q[fulltext]" style="float:left; width:200px; margin-left: 15px;">
           <input type="submit" id='youtube_search_submit' value="search" style="float:left"> &nbsp;

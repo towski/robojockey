@@ -147,8 +147,8 @@ jQuery(function ($) {
               link:  data[index].permalink_url, 
               title: data[index].title, 
               image: data[index].artwork_url,
-              duration: (data[index].duration / 1000.0),
-              description: data[index].description.replace(/\"/g, "&quot;")
+              duration: (data[index].duration / 1000.0)
+//              description: data[index].description.replace(/\"/g, "&quot;")
             }
             $.ajax({url: location.pathname + "/events/create", type: "POST", data: json});
             $.modal.close();
@@ -156,6 +156,37 @@ jQuery(function ($) {
             return false;
           });
       		OSX.init();
+        }
+      })
+    } else if (provider == "bandcamp"){
+      $.ajax({url: "http://jsonpify.heroku.com?resource=" + search, dataType: "jsonp", 
+        success: function(data){ 
+          var tracks = JSON.parse(data.match(/trackinfo : ([^\]]*])/)[1])
+          var artist =  data.match(/artist: "([^\"]*)"/)[1]
+          $('#youtube_search_submit').show()
+      	  $('#search_indicator').hide()
+          for(var i = 0; i < tracks.length && i < 20; i++){
+            if(tracks[i].file != undefined){
+              $("#osx-modal-data-list").append('<tr class="search_result" id="' + i + 'result">' +
+                '<td><a id="' + i + 'number" href="' + tracks[i].file + '" class="soundcloud_link">' + artist + " " + tracks[i].title +  "</a></td>" +
+                "</tr>")
+            }
+          }
+          $('tr.search_result').click(function(event){
+            var target = $(event.target).parents('tr')[0]
+            var index = parseInt(target.id)
+            var json = {
+              type: 'bandcamp', 
+              link:  tracks[index].file, 
+              title: artist + " - " + tracks[index].title,
+              duration: tracks[index].duration
+            }
+            $.ajax({url: location.pathname + "/events/create", type: "POST", data: json});
+            $.modal.close();
+            $('#youtube_search_text').focus()
+            return false;
+          });
+          OSX.init();
         }
       })
     }

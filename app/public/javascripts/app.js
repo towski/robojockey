@@ -32,6 +32,7 @@ var App = function(){
 
 App.prototype = {
   handleData: function(data){
+    console.log("ahah")
     this.media = this.media.concat(data)
     this.writeCookie()
     this.refreshQueue()
@@ -78,13 +79,18 @@ App.prototype = {
         "<td id='" + index + "table'>" + song.title + "</td>" +
         "<td>" + parseInt(song.duration / 60.0) + ":" + sec + "</td>" +
         "<td><a id='" + index + "link' href='#' onclick='app.removeItem( parseInt(event.target.id)); return false;'>x</a></td>" +
+        "<td style='display:none' class='admin'><a id='" + index + "delete' href='#' onclick='app.delete( parseInt(event.target.id)); return false;'>delete</a></td>" +
         "</tr>")  
     }
     $('.song').click(function(event){
       var target = $(event.target).parents('tr')[0]
       var index = parseInt(target.id)
+      app.stop()
       app.playIndex(index)
     })
+    if(Cookie.get('admin', '/') != undefined){
+      $('.admin').show()
+    }
   },
   
   removeLast: function(){
@@ -165,14 +171,22 @@ App.prototype = {
         this.soundcloud_started = true;
         startSoundCloud(item.link);
       } else {
+        $("#soundcloud").show()
         soundcloud_player.api_load(app.current().link);
       } 
+    } else if(item.type == "bandcamp"){
+      $('#bandcamp').attr('src', app.current().link)
     }
+    
   },
   
   stop: function(){
     this.playing = false
+    if(typeof(soundcloud_player) != "undefined"){
+      soundcloud_player.api_stop()
+    }
     $('#youtube_mother').hide()
+    $('#bandcamp').attr('src', '')
   },
   
   forward: function(){
@@ -251,6 +265,12 @@ App.prototype = {
     })
   },
   
+  delete: function(index){
+    this.removeItem(index)
+    $.ajax({url: location.pathname + "/events/delete", type: "POST", data: {index: index}})
+    return false
+  },
+  
   updateEndingIndex: function(newIndex){
     this.endingIndex = newIndex
     Cookie.set('endingIndex', this.endingIndex, undefined, location.pathname)
@@ -319,6 +339,7 @@ $(document).ready(function(){
   
   $('#play').click(function(event){
     app.play()
+    return false
   })
   
   $('#forward').click(function(event){
@@ -332,4 +353,10 @@ $(document).ready(function(){
   $('#past').click(function(event){
     app.past()
   })
+  
+  $('#bandcamp').bind("ended", function(){ app.forward() })
+  
+  if(Cookie.get('admin', '/') != undefined){
+    $('.admin').show()
+  }
 })

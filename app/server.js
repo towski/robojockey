@@ -20,7 +20,7 @@ callbacks = {}
 var app = express.createServer() 
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser())
-app.use(express.session({secret: 'secret', key: 'express.sid'}))
+//app.use(express.session({secret: 'secret', key: 'express.sid'}))
 app.use(express.bodyParser());
 
 function initializeSession(req, res){
@@ -70,7 +70,7 @@ app.get('/:id/media/:page', function(req, res){
   var room = req.params.id
   redis.lrange(utils.fullRoomQueue(room), (page * -10) - 10, (page * -10) - 1, function(err, reply){
     if(reply.length == 0){
-      res.send(DEFAULT)
+      res.send("[]")
     } else {
       res.send("[" + unescape(reply) + "]")
     }
@@ -80,11 +80,11 @@ app.get('/:id/media/:page', function(req, res){
 app.get('/:id/media_forwards/:starting_index/:number_to_get', function(req, res){
   var starting_index = parseInt(req.params.starting_index || 0)
   var number_to_get = parseInt(req.params.number_to_get || 10)
-  
-  var room = req.params.id
+  var room = req.params.id  
   redis.lrange(utils.fullRoomQueue(room), starting_index, (starting_index + number_to_get) - 1, function(err, reply){
+    console.log(err)
     if(reply.length == 0){
-      res.send(DEFAULT)
+      res.send("[]")
     } else {
       res.send("[" + unescape(reply) + "]")
     }
@@ -131,4 +131,14 @@ app.post('/:id/events/create', function(req, res){
   })
 })
 
-app.listen(3000) 
+app.post('/:id/events/delete', function(req, res){
+  var user = initializeSession(req, res)
+  var room = req.params.id
+  var data = req.body
+  redis.lset(utils.fullRoomQueue(room), data.index, "undefined") 
+  redis.lrem(utils.fullRoomQueue(room), 0, "undefined")
+  res.send("ok")
+})
+
+app.listen(4000) 
+//app.listen(80) 
