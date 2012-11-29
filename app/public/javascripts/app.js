@@ -192,7 +192,8 @@ App.prototype = {
   forward: function(){
     if(this.currentSong + 1 < this.media.length){
       if(this.playing){
-        this.removeLast()
+        //this.removeLast()
+        this.currentSong += 1
         this.playIndex(this.currentSong)
       } else {
         this.currentSong += 1
