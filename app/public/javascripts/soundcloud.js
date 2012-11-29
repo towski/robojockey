@@ -18,7 +18,7 @@ soundcloud.addEventListener('onPlayerError', function(player, data) {
 });
 
 soundcloud.addEventListener('onMediaEnd', function(player, data) {
-  app.next();
+  app.forward();
 });
 
 function startSoundCloud(url){
