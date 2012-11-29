@@ -140,5 +140,5 @@ app.post('/:id/events/delete', function(req, res){
   res.send("ok")
 })
 
-app.listen(4000) 
-//app.listen(80) 
+//app.listen(4000) 
+app.listen(80) 
