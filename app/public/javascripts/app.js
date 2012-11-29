@@ -193,8 +193,8 @@ App.prototype = {
     if(this.currentSong + 1 < this.media.length){
       if(this.playing){
         //this.removeLast()
-        this.currentSong += 1
-        this.playIndex(this.currentSong)
+        this.stop()
+        this.playIndex(this.currentSong + 1)
       } else {
         this.currentSong += 1
         this.refreshQueue()
