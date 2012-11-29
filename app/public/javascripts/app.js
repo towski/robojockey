@@ -212,6 +212,7 @@ App.prototype = {
   back: function(){
     if(this.currentSong - 1 >= 0){
       if(this.playing){
+        this.stop()
         this.playIndex(this.currentSong - 1)
       } else {
         this.currentSong -= 1
